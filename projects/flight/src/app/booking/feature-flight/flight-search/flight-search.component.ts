@@ -1,16 +1,25 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Flight, FlightFilter } from '../../logic-flight';
-import { TicketsFacade } from './../../logic-flight/+state/facade';
+import { FormsModule } from '@angular/forms';
+import { Flight, FlightFilter, injectTicketsFacade } from '../../logic-flight';
+import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
 
 
 @Component({
   selector: 'app-flight-search',
-  standalone: false,
+  imports: [
+    CommonModule,
+    FormsModule,
+    FlightCardComponent,
+    FlightFilterComponent
+  ],
   templateUrl: './flight-search.component.html',
 })
 export class FlightSearchComponent {
+  private ticketsFacade = injectTicketsFacade();
+
   protected filter = {
-    from: 'Paris',
+    from: 'London',
     to: 'New York',
     urgent: false
   };
@@ -19,8 +28,6 @@ export class FlightSearchComponent {
     5: true
   };
   protected flights$ = this.ticketsFacade.flights$;
-
-  constructor(private ticketsFacade: TicketsFacade) {}
 
   protected search(filter: FlightFilter): void {
     this.filter = filter;

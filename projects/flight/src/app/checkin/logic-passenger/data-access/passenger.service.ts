@@ -1,17 +1,18 @@
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
+import { Injectable, ResourceRef, Signal, inject, resource } from "@angular/core";
+import { rxResource } from "@angular/core/rxjs-interop";
 import { Observable } from "rxjs";
-import { Passenger } from "../model/passenger";
+import { initialPassenger, Passenger } from "../model/passenger";
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class PassengerService {
+  private http = inject(HttpClient);
+
   passengers: Passenger[] = [];
   private baseUrl = `https://demo.angulararchitects.io/api`;
-
-  constructor(private http: HttpClient) {}
 
   load(firstname?: string, lastname?: string): void {
     this.find(firstname, lastname).subscribe({
@@ -41,6 +42,25 @@ export class PassengerService {
       .set('id', id);
 
     return this.http.get<Passenger>(url, { params });
+  }
+
+  findAsResource(filter: Signal<{ firstname: string, lastname: string }>): ResourceRef<Passenger[] | undefined> {
+    return rxResource({
+      params: () => filter().firstname === initialPassenger.firstName
+        ? undefined
+        : filter(),
+      stream: ({ params: filter }) => this.find(filter.firstname, filter.lastname)
+    });
+  }
+
+  findByIdAsResource(id: Signal<number>): ResourceRef<Passenger | undefined> {
+    return resource({
+      params: id,
+      loader: ({ params: id, abortSignal }) => fetch(
+        [this.baseUrl, 'passenger', id].join('/'),
+        { signal: abortSignal }
+      ).then(res => res.json() as Promise<Passenger>)
+    });
   }
 
   save(passenger: Passenger): Observable<Passenger> {
