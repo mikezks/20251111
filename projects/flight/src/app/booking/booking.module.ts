@@ -7,7 +7,6 @@ import { BookingRoutingModule } from './booking-routing.module';
 import { FlightBookingComponent, FlightEditComponent } from './feature-flight';
 import { TicketEffects } from './logic-flight/+state/effects';
 import { ticketFeature } from './logic-flight/+state/reducer';
-import { UiFlightModule } from './ui-flight/ui-flight.module';
 
 
 @NgModule({
@@ -17,7 +16,6 @@ import { UiFlightModule } from './ui-flight/ui-flight.module';
         ReactiveFormsModule,
         StoreModule.forFeature(ticketFeature),
         EffectsModule.forFeature([TicketEffects]),
-        UiFlightModule,
         FlightBookingComponent,
         FlightEditComponent
     ]
