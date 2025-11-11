@@ -3,13 +3,14 @@ import { Flight, FlightFilter } from '../../logic-flight';
 import { TicketsFacade } from './../../logic-flight/+state/facade';
 import { AsyncPipe, JsonPipe, NgFor, NgIf } from '@angular/common';
 import { UiFlightModule } from '../../ui-flight/ui-flight.module';
+import { FlightCardComponent } from '../../ui-flight/flight-card/flight-card.component';
 
 
 @Component({
   selector: 'app-flight-search',
   imports: [
     NgIf, NgFor, JsonPipe, AsyncPipe,
-    UiFlightModule
+    UiFlightModule, FlightCardComponent
   ],
   templateUrl: './flight-search.component.html',
 })
