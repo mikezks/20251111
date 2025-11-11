@@ -27,4 +27,9 @@ export const APP_NAVIGATION: NavigationConfig = [
     label: 'Boarding',
     icon: 'boarding'
   },
+  {
+    route: 'hello-world',
+    label: 'Hello World',
+    icon: 'boarding'
+  },
 ];
