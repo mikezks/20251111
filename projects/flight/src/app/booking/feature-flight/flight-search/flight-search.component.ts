@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EnvironmentInjector, inject, Injector, OnInit, runInInjectionContext } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Flight, FlightFilter, injectTicketsFacade } from '../../logic-flight';
 import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
@@ -16,8 +16,10 @@ import { FlightService } from '../../api-boarding';
   ],
   templateUrl: './flight-search.component.html',
 })
-export class FlightSearchComponent {
+export class FlightSearchComponent implements OnInit {
   private ticketsFacade = injectTicketsFacade();
+  private injector = inject(EnvironmentInjector);
+  private flightService = inject(FlightService);
 
   protected filter = {
     from: 'London',
@@ -29,6 +31,15 @@ export class FlightSearchComponent {
     5: true
   };
   protected flights$ = this.ticketsFacade.flights$;
+
+  ngOnInit(): void {
+    const flightService = runInInjectionContext(
+      this.injector,
+      () => inject(FlightService)
+    );
+
+    console.log(flightService.flights);
+  }
 
   protected search(filter: FlightFilter): void {
     this.filter = filter;
