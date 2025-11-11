@@ -48,3 +48,5 @@ export const BOOKING_ROUTES: Routes = [
     ]
   }
 ];
+
+export default BOOKING_ROUTES;
