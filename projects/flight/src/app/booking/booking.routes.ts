@@ -17,11 +17,7 @@ export const BOOKING_ROUTES: Routes = [
     component: FlightBookingComponent,
     providers: [
       provideState(ticketFeature),
-      provideEffects([TicketEffects]),
-      /* provideHttpClient(
-        withInterceptors([authInterceptor]),
-        withRequestsMadeViaParent(),
-      ) */
+      provideEffects([TicketEffects])
     ],
     children: [
       {
