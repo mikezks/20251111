@@ -15,8 +15,8 @@ const routes: Routes = [
   },
   {
     path: 'booking',
-    loadChildren: () => import('./booking/booking.module')
-      .then(esm => esm.BookingModule)
+    loadChildren: () => import('./booking/booking.routes')
+      .then(esm => esm.BOOKING_ROUTES)
   },
   {
     path: 'checkin',
