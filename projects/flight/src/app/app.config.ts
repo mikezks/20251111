@@ -6,7 +6,7 @@ import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { APP_ROUTES } from './app.routes';
 import { provideRouterFeature } from './shared/logic-router-state';
-import { provideBaseUrl } from './app.provider';
+import { provideBaseUrl, provideInitConfig } from './app.provider';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -17,6 +17,9 @@ export const appConfig: ApplicationConfig = {
       // withInterceptors([authInterceptor]),
     ),
     provideBaseUrl('https://demo.angulararchitects.io/api/'),
+    provideInitConfig({
+      username: 'john.doe'
+    }),
     provideStore(),
     provideEffects(),
     provideRouterFeature(),
