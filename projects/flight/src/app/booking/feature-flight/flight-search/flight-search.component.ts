@@ -1,17 +1,22 @@
 import { Component } from '@angular/core';
 import { Flight, FlightFilter } from '../../logic-flight';
 import { TicketsFacade } from './../../logic-flight/+state/facade';
+import { AsyncPipe, JsonPipe, NgFor, NgIf } from '@angular/common';
+import { UiFlightModule } from '../../ui-flight/ui-flight.module';
 
 
 @Component({
   selector: 'app-flight-search',
-  standalone: false,
+  imports: [
+    NgIf, NgFor, JsonPipe, AsyncPipe,
+    UiFlightModule
+  ],
   templateUrl: './flight-search.component.html',
 })
 export class FlightSearchComponent {
   protected filter = {
-    from: 'Paris',
-    to: 'New York',
+    from: 'London',
+    to: 'Paris',
     urgent: false
   };
   protected basket: Record<number, boolean> = {
