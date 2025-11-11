@@ -10,8 +10,8 @@ import { TicketsFacade } from './../../logic-flight/+state/facade';
 })
 export class FlightSearchComponent {
   protected filter = {
-    from: 'Paris',
-    to: 'New York',
+    from: 'London',
+    to: 'Paris',
     urgent: false
   };
   protected basket: Record<number, boolean> = {
