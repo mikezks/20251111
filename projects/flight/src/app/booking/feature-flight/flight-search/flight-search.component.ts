@@ -20,7 +20,7 @@ export class FlightSearchComponent {
 
   protected filter = {
     from: 'London',
-    to: 'New York',
+    to: 'Paris',
     urgent: false
   };
   protected basket: Record<number, boolean> = {
