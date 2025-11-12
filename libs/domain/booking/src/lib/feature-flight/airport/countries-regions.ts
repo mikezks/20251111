@@ -1,6 +1,6 @@
 
 export const COUNTRIES_WITH_REGIONS: Record<string, string[]> = {
-  Austria: [
+  Österreich: [
     'Wien', 'Niederösterreich', 'Steiermark'
   ],
   Deutschland: [
