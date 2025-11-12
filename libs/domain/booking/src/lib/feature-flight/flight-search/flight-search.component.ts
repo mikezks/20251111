@@ -1,72 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BookingStore, Flight, injectTicketsFacade } from '../../logic-flight';
+import { Flight } from '../../logic-flight';
+import { BookingStore } from '../../logic-flight/state/booking.store';
 import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
 
 
 @Component({
-  selector: 'app-flight-search',
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     FlightCardComponent,
     FlightFilterComponent
   ],
+  selector: 'app-flight-search',
   templateUrl: './flight-search.component.html',
 })
 export class FlightSearchComponent {
-  private ticketsFacade = injectTicketsFacade();
-  private store = inject(BookingStore);
-
-  protected filter = signal({
-    from: 'London',
-    to: 'Paris',
-    urgent: false
-  });
-  protected from = computed(() => this.filter().from);
-  protected route = computed(
-    () => 'From ' + this.filter().from + ' to ' + this.filter().to + '.'
-  );
-  protected basket: Record<number, boolean> = {
-    3: true,
-    5: true
-  };
-  protected flights$ = this.ticketsFacade.flights$;
-
-  constructor() {
-    effect(() => console.log(this.route()));
-    effect(() => {
-      this.filter();
-      untracked(() => this.search());
-    });
-
-    this.store.delayed()
-  }
-
-  protected search(): void {
-    if (!this.filter().from || !this.filter().to) {
-      return;
-    }
-
-    this.ticketsFacade.search(this.filter());
-  }
-
-  protected delay(flight: Flight): void {
-    const oldFlight = flight;
-    const oldDate = new Date(oldFlight.date);
-
-    const newDate = new Date(oldDate.getTime() + 1000 * 60 * 5); // Add 5 min
-    const newFlight = {
-      ...oldFlight,
-      date: newDate.toISOString(),
-      delayed: true
-    };
-
-    this.ticketsFacade.update(newFlight);
-  }
-
-  protected reset(): void {
-    this.ticketsFacade.reset();
-  }
+  protected store = inject(BookingStore);
 }
