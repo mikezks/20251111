@@ -1,29 +1,27 @@
 import { httpResource } from '@angular/common/http';
-import { Component, effect, inject, input, numberAttribute } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Component, effect, input, numberAttribute, signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { form, Control } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { initialPassenger, Passenger } from '../../logic-passenger';
-import { validatePassengerStatus } from '../../util-validation';
 
 
 @Component({
   selector: 'app-passenger-edit',
   imports: [
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    // (3) Field: Template Binding
+    Control, 
   ],
   templateUrl: './passenger-edit.component.html'
 })
 export class PassengerEditComponent {
-  protected editForm = inject(NonNullableFormBuilder).group({
-    id: [0],
-    firstName: [''],
-    name: [''],
-    bonusMiles: [0],
-    passengerStatus: ['', [
-      validatePassengerStatus(['A', 'B', 'C'])
-    ]]
-  });
+  // (1) Data Model: Writable Signal
+  protected readonly passenger = signal(initialPassenger);
+
+  // (2) Field State: valid, touched, dirty, value, disabled, ...
+  protected readonly editForm = form(this.passenger);
 
   readonly id = input(0, { transform: numberAttribute });
   protected readonly passengerResource = httpResource<Passenger>(() => ({
@@ -33,15 +31,15 @@ export class PassengerEditComponent {
 
   constructor() {
     effect(() => console.log(this.id()));
-    effect(() => {
-      if (this.passengerResource.hasValue()) {
-        this.editForm.patchValue(this.passengerResource.value());
-      }
-    });
+    // effect(() => {
+    //   if (this.passengerResource.hasValue()) {
+    //     this.editForm.patchValue(this.passengerResource.value());
+    //   }
+    // });
   }
 
   protected save(): void {
-    this.passengerResource.set(this.editForm.getRawValue());
-    console.log(this.editForm.value);
+    // this.passengerResource.set(this.editForm.getRawValue());
+    console.log(this.editForm());
   }
 }
