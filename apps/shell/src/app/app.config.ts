@@ -12,10 +12,10 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
-    provideCheckNoChangesConfig({
+    /* provideCheckNoChangesConfig({
       interval: 3_000,
       exhaustive: true
-    }),
+    }), */
     provideRouter(APP_ROUTES,
       withComponentInputBinding()
     ),
