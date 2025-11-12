@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Flight, FlightFilter, injectTicketsFacade } from '../../logic-flight';
+import { Flight, FlightFilter } from '../../logic-flight';
+import { FlightService } from '../../logic-flight/data-access/flight.service';
 import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
 
 
@@ -16,7 +17,7 @@ import { FlightCardComponent, FlightFilterComponent } from '../../ui-flight';
   templateUrl: './flight-search.component.html',
 })
 export class FlightSearchComponent {
-  private ticketsFacade = injectTicketsFacade();
+  private flightService = inject(FlightService);
 
   protected filter = {
     from: 'Paris',
@@ -27,7 +28,7 @@ export class FlightSearchComponent {
     3: true,
     5: true
   };
-  protected flights$ = this.ticketsFacade.flights$;
+  protected flights: Flight[] = [];
 
   protected search(filter: FlightFilter): void {
     this.filter = filter;
@@ -36,7 +37,11 @@ export class FlightSearchComponent {
       return;
     }
 
-    this.ticketsFacade.search(this.filter);
+    this.flightService.find(
+      this.filter.from, this.filter.to, this.filter.urgent
+    ).subscribe(
+      flights => this.flights = flights
+    );
   }
 
   protected delay(flight: Flight): void {
@@ -50,10 +55,12 @@ export class FlightSearchComponent {
       delayed: true
     };
 
-    this.ticketsFacade.update(newFlight);
+    this.flights = this.flights.map(
+      flight => flight.id === newFlight.id ? newFlight : flight
+    );
   }
 
   protected reset(): void {
-    this.ticketsFacade.reset();
+    this.flights = [];
   }
 }
