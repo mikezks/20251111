@@ -23,6 +23,7 @@ export class FlightSearchComponent {
     to: 'Paris',
     urgent: false
   });
+  protected from = computed(() => this.filter().from);
   protected route = computed(
     () => 'From ' + this.filter().from + ' to ' + this.filter().to + '.'
   );
@@ -38,6 +39,30 @@ export class FlightSearchComponent {
       this.filter();
       untracked(() => this.search());
     });
+
+    // Signal Update Behavior
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Barcelona' }));
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Madrid' }));
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Athens' }));
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Rome' }));
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Oslo' }));
+    console.log(this.filter().from);
+    this.filter.update(curr => ({ ...curr, from: 'Bern' }));
+    console.log(this.filter().from);
+
+    // Glitch-free Behavior
+    const counter = signal(0);
+    const isEven = computed(() => counter() % 2 === 0);
+    setInterval(() => counter.update(curr => curr + 1), 2_000);
+    effect(() => console.log({
+      // counter: counter(),
+      isEven: isEven()
+    }));
   }
 
   protected search(): void {
