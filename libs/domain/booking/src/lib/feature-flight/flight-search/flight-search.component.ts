@@ -34,8 +34,9 @@ export class FlightSearchComponent {
 
   constructor() {
     effect(() => console.log(this.route()));
+    effect(() => this.search(this.filter()));
   }
-  
+
   protected search(filter: FlightFilter): void {
     this.filter.set(filter);
 
