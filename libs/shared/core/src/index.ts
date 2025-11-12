@@ -8,3 +8,4 @@ export * from './lib/ui-core';
 export * from './lib/util-cd-visualizer';
 export * from './lib/util-common/date-utils';
 export * from './lib/util-signals/signal-debugging';
+export * from './lib/util-signals/signal-operators';
