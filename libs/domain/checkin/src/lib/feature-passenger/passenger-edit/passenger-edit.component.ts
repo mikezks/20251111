@@ -12,34 +12,28 @@ import { initialPassenger, Passenger } from '../../logic-passenger';
     ReactiveFormsModule,
     RouterLink,
     // (3) Field: Template Binding
-    Control, 
+    Control, // -> Angular 21: Field
   ],
   templateUrl: './passenger-edit.component.html'
 })
 export class PassengerEditComponent {
   // (1) Data Model: Writable Signal
-  protected readonly passenger = signal(initialPassenger);
-
-  // (2) Field State: valid, touched, dirty, value, disabled, ...
-  protected readonly editForm = form(this.passenger);
-
-  readonly id = input(0, { transform: numberAttribute });
   protected readonly passengerResource = httpResource<Passenger>(() => ({
     url: 'https://demo.angulararchitects.io/api/passenger',
     params: { id: this.id() }
   }), { defaultValue: initialPassenger });
 
+  // (2) Field State: valid, touched, dirty, value, disabled, ...
+  protected readonly editForm = form(this.passengerResource.value);
+
+  readonly id = input(0, { transform: numberAttribute });
+
   constructor() {
     effect(() => console.log(this.id()));
-    // effect(() => {
-    //   if (this.passengerResource.hasValue()) {
-    //     this.editForm.patchValue(this.passengerResource.value());
-    //   }
-    // });
   }
 
   protected save(): void {
-    // this.passengerResource.set(this.editForm.getRawValue());
-    console.log(this.editForm());
+    console.log(this.editForm().value());
+    console.log(this.passengerResource.value());
   }
 }
