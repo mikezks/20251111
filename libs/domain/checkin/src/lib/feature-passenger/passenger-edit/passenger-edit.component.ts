@@ -1,11 +1,9 @@
-import { Component, effect, inject, input, numberAttribute, signal } from '@angular/core';
-import { signalOperators } from '@flight-demo/shared/core';
+import { httpResource } from '@angular/common/http';
+import { Component, effect, inject, input, numberAttribute } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { validatePassengerStatus } from '../../util-validation';
-import { initialPassenger } from '../../logic-passenger';
-import { PassengerService } from '../../logic-passenger/data-access/passenger.service';
-import { pipe, switchMap } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { initialPassenger, Passenger } from '../../logic-passenger';
+import { validatePassengerStatus } from '../../util-validation';
 
 
 @Component({
@@ -17,7 +15,6 @@ import { RouterLink } from '@angular/router';
   templateUrl: './passenger-edit.component.html'
 })
 export class PassengerEditComponent {
-  private passengerService = inject(PassengerService);
   protected editForm = inject(NonNullableFormBuilder).group({
     id: [0],
     firstName: [''],
@@ -29,7 +26,10 @@ export class PassengerEditComponent {
   });
 
   readonly id = input(0, { transform: numberAttribute });
-  protected readonly passengerResource = this.passengerService.findByIdAsResource(this.id);
+  protected readonly passengerResource = httpResource<Passenger>(() => ({
+    url: 'https://demo.angulararchitects.io/api/passenger',
+    params: { id: this.id() }
+  }), { defaultValue: initialPassenger });
 
   constructor() {
     effect(() => console.log(this.id()));
